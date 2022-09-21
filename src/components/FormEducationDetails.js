@@ -1,15 +1,32 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
+import validator from "validator";
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 export class FormEducationDetails extends Component {
-  continue = e => {
-    e.preventDefault();
-    this.props.nextStep();
-  };
+    constructor(props) {
+        super(props);
+        this.state = {
+          error: false,
+        };
+      }
+    continue = (e) => {
+        const { values } = this.props;
+        e.preventDefault();
+        if (
+          validator.isEmpty(values.lastQualification) ||
+          validator.isEmpty(values.college)|| validator.isEmpty(values.passingYear)||  validator.isEmpty(values.marks)
+        ) {
+          this.setState({
+            error: true,
+          });
+        }
+        else
+        this.props.nextStep();
+      };
 
   back = e => {
     e.preventDefault();
@@ -28,6 +45,7 @@ export class FormEducationDetails extends Component {
           >
             <AppBar title="Enter Personal Details" />
             <TextField
+              error={this.state.error}
               placeholder="Highest qualification"
               label="Qualification"
               onChange={handleChange('lastQualification')}
@@ -37,6 +55,7 @@ export class FormEducationDetails extends Component {
             />
             <br />
             <TextField
+            error={this.state.error}
               placeholder="College"
               label="College"
               onChange={handleChange('college')}
@@ -46,6 +65,7 @@ export class FormEducationDetails extends Component {
             />
             <br />
             <TextField
+            error={this.state.error}
               placeholder="passing Year"
               label="passing Year"
               onChange={handleChange('passingYear')}
@@ -55,6 +75,7 @@ export class FormEducationDetails extends Component {
             />
             <br />
             <TextField
+            error={this.state.error}
               placeholder="Enter Your marks"
               label="Marks"
               onChange={handleChange('marks')}

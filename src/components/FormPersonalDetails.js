@@ -1,15 +1,33 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
+import validator from "validator";
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 export class FormPersonalDetails extends Component {
-  continue = e => {
-    e.preventDefault();
-    this.props.nextStep();
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: false,
+    };
+  }
+
+  continue = (e) => {
+        const { values } = this.props;
+        e.preventDefault();
+        if (
+          validator.isEmpty(values.city) ||
+          validator.isEmpty(values.occupation)|| validator.isEmpty(values.bio)
+        ) {
+          this.setState({
+            error: true,
+          });
+        }
+        else
+        this.props.nextStep();
+      };
 
   back = e => {
     e.preventDefault();
@@ -28,6 +46,7 @@ export class FormPersonalDetails extends Component {
           >
             <AppBar title="Enter Personal Details" />
             <TextField
+             error={this.state.error}
               placeholder="Enter Your Occupation"
               label="Occupation"
               onChange={handleChange('occupation')}
@@ -37,6 +56,7 @@ export class FormPersonalDetails extends Component {
             />
             <br />
             <TextField
+             error={this.state.error}
               placeholder="Enter Your City"
               label="City"
               onChange={handleChange('city')}
@@ -46,6 +66,7 @@ export class FormPersonalDetails extends Component {
             />
             <br />
             <TextField
+             error={this.state.error}
               placeholder="Enter Your Bio"
               label="Bio"
               onChange={handleChange('bio')}
